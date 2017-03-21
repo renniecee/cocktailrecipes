@@ -1,0 +1,85 @@
+body {
+	background: #846736;
+	color: white;
+	margin: 0;
+	font-family: "Lato", sans-serif;
+}
+
+#app {
+	background: linear-gradient(225deg, #0C0A27 0%, #000000 100%);
+	height: calc(100vh - 20px);
+	width: calc(100vw - 20px);
+	margin: 10px;
+}
+
+.wrapper {
+	padding: 2em 5em;
+	margin: 0 auto;
+	max-width: 1400px;
+}
+
+h1, h3 {
+	font-family: 'Libre Baskerville', serif;
+	font-weight: 100;
+	margin: 0;
+	-webkit-font-smoothing: antialiased;
+}
+
+h2 {
+	font-size: 11px;
+	text-transform: uppercase;
+	letter-spacing: 3px;
+	line-height: 16px;
+	color: #FDB333;
+	text-align: center;
+	font-weight: 100;
+}
+
+p {
+	font-size: 11px;
+	text-transform: uppercase;
+	letter-spacing: 3px;
+	line-height: 16px;
+}
+
+header {
+	margin: 0 auto;
+	margin-top: 40px;
+	text-align: center;
+/* 	display: flex;
+	justify-content: space-between; */
+}
+
+/* header.title {
+	align-self: center;
+}
+
+header.showAdd {
+	align-self: flex-end;
+} */
+
+fieldset {
+	border: none;
+	padding: 0;
+	margin: 10px 0;
+}
+
+input.amount {
+	width: 40px;
+	float: left;
+}
+
+.drinkName {
+	width: 275px;
+	margin: 0;
+	float: left;
+}
+
+.oz{
+	float: left;
+	margin: 0;
+}
+
+.ingredientName {
+	float: left;
+}
