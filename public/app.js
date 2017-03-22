@@ -20621,9 +20621,6 @@ var App = function (_React$Component) {
 				ingredient: this.state.ingredient
 			};
 			var newIngredients = [].concat(_toConsumableArray(this.state.ingredients), [ingredient]);
-
-			//Clear state for amount and ingredient to clear
-			// console.log("new", ingredient);
 			this.setState({
 				ingredients: newIngredients,
 				amount: '',
@@ -20638,11 +20635,6 @@ var App = function (_React$Component) {
 				name: this.state.drinkName,
 				ingredients: this.state.ingredients
 			};
-
-			// const newDrinks = [...this.state.drinks, drink]
-			// this.setState({
-			// 	drinks: newDrinks,
-			// });
 
 			var dbRef = firebase.database().ref();
 			dbRef.push(drink);
