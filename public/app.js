@@ -20531,8 +20531,10 @@ var App = function (_React$Component) {
 		_this.state = {
 			showAddNewDrink: false,
 			showAddNewIngredients: false,
+			showSubmitCocktail: false,
 			amount: '',
 			ingredients: [],
+			ingredient: '',
 			drinkName: '',
 			drinks: []
 		};
@@ -20544,18 +20546,42 @@ var App = function (_React$Component) {
 		_this.addDrink = _this.addDrink.bind(_this);
 		_this.resetForm = _this.resetForm.bind(_this);
 		_this.removeIng = _this.removeIng.bind(_this);
-		_this.displayDrinks = _this.displayDrinks.bind(_this);
+		_this.removeItem = _this.removeItem.bind(_this);
+		_this.submitCocktail = _this.submitCocktail.bind(_this);
+
 		return _this;
 	}
 
 	_createClass(App, [{
-		key: 'displayDrinks',
-		value: function displayDrinks() {
-			this.setState({
-				drinks: this.state.drinks
+		key: 'componentDidMount',
+		value: function componentDidMount() {
+			var _this2 = this;
+
+			firebase.database().ref().on('value', function (res) {
+				var userData = res.val();
+				var dataArray = [];
+				for (var objectKey in userData) {
+					userData[objectKey].key = objectKey;
+					dataArray.push(userData[objectKey]);
+				}
+				_this2.setState({
+					drinks: dataArray
+				});
 			});
-			var dbRef = firebase.database().ref();
-			dbRef.push(drinks);
+		}
+	}, {
+		key: 'removeItem',
+		value: function removeItem(drink) {
+			var dbRef = firebase.database().ref(drink.key);
+			dbRef.remove();
+		}
+	}, {
+		key: 'submitCocktail',
+		value: function submitCocktail(e) {
+			e.preventDefault();
+			this.setState({
+				showSubmitCocktail: true
+			});
 		}
 	}, {
 		key: 'removeIng',
@@ -20613,18 +20639,28 @@ var App = function (_React$Component) {
 				ingredients: this.state.ingredients
 			};
 
-			var newDrinks = [].concat(_toConsumableArray(this.state.drinks), [drink]);
-			this.setState({
-				drinks: newDrinks
-			});
+			// const newDrinks = [...this.state.drinks, drink]
+			// this.setState({
+			// 	drinks: newDrinks,
+			// });
+
+			var dbRef = firebase.database().ref();
+			dbRef.push(drink);
+
 			this.resetForm();
 		}
 	}, {
 		key: 'showDrinkCart',
 		value: function showDrinkCart() {
-			this.setState({
-				showAddNewDrink: true
-			});
+			if (this.state.showAddNewDrink === false) {
+				this.setState({
+					showAddNewDrink: true
+				});
+			}if (this.state.showAddNewDrink === true) {
+				this.setState({
+					showAddNewDrink: false
+				});
+			}
 		}
 	}, {
 		key: 'handleChange',
@@ -20634,14 +20670,27 @@ var App = function (_React$Component) {
 	}, {
 		key: 'render',
 		value: function render() {
-			var _this2 = this;
+			var _this3 = this;
 
 			return _react2.default.createElement(
 				'div',
 				{ className: 'wrapper' },
+				_react2.default.createElement('div', { className: 'bubble1' }),
+				_react2.default.createElement('div', { className: 'bubble2' }),
+				_react2.default.createElement('div', { className: 'bubble3' }),
 				_react2.default.createElement(
 					'header',
 					null,
+					_react2.default.createElement(
+						'div',
+						{ className: 'showAdd', onClick: this.showDrinkCart },
+						_react2.default.createElement(
+							'p',
+							null,
+							'Add Drink'
+						),
+						_react2.default.createElement('i', { className: 'fa fa-plus', 'aria-hidden': 'true' })
+					),
 					_react2.default.createElement(
 						'div',
 						{ className: 'title' },
@@ -20656,112 +20705,132 @@ var App = function (_React$Component) {
 							'recipes'
 						)
 					),
-					_react2.default.createElement(
-						'div',
-						{ className: 'showAdd', onClick: this.showDrinkCart },
-						_react2.default.createElement(
-							'p',
-							null,
-							'Add Drink'
-						),
-						_react2.default.createElement('i', { className: 'fa fa-plus', 'aria-hidden': 'true' })
-					)
+					_react2.default.createElement('div', { className: 'empty' })
 				),
 				_react2.default.createElement(
-					'section',
-					{ className: 'addRecipe', ref: function ref(_ref) {
-							return _this2.addrecipe = _ref;
-						} },
-					this.state.showAddNewDrink === true ? _react2.default.createElement(
-						'form',
-						{ onSubmit: this.addDrink },
-						_react2.default.createElement(
-							'h3',
-							null,
-							'Add a cocktail'
-						),
-						_react2.default.createElement(
-							'fieldset',
-							null,
-							_react2.default.createElement('input', { className: 'drinkName', type: 'text', name: 'drinkName', placeholder: 'Drink name', onChange: this.handleChange }),
-							_react2.default.createElement(
-								'div',
-								null,
-								_react2.default.createElement(
-									'button',
-									{ onClick: this.addCocktail },
-									'Add cocktail'
-								)
-							)
-						),
-						this.state.showAddNewIngredients === true ? _react2.default.createElement(
-							'fieldset',
-							null,
+					'div',
+					{ className: 'main' },
+					_react2.default.createElement(
+						'section',
+						{ className: 'addRecipe', ref: function ref(_ref) {
+								return _this3.addrecipe = _ref;
+							} },
+						this.state.showAddNewDrink === true ? _react2.default.createElement(
+							'form',
+							{ className: 'addCocktailForm', onSubmit: this.addDrink },
 							_react2.default.createElement(
 								'h3',
 								null,
-								'Ingredients'
+								'add a cocktail'
 							),
 							_react2.default.createElement(
-								'div',
-								{ className: 'addingredient', onClick: this.showAddInput },
-								_react2.default.createElement('input', { className: 'amount', name: 'amount', type: 'number', onChange: this.handleChange, value: this.state.amount }),
+								'fieldset',
+								{ className: 'drinkNameFieldset' },
+								_react2.default.createElement('input', { className: 'drinkName', type: 'text', name: 'drinkName', placeholder: 'Drink name', onChange: this.handleChange, value: this.state.drinkName }),
 								_react2.default.createElement(
-									'p',
-									{ className: 'oz' },
-									'oz'
-								),
-								_react2.default.createElement('input', { className: 'ingredientName', type: 'text', name: 'ingredient', value: this.state.ingredient, placeholder: 'ingredient', onChange: this.handleChange }),
-								_react2.default.createElement(
-									'button',
-									{ onClick: this.addIngredient },
-									_react2.default.createElement('i', { className: 'fa fa-plus', 'aria-hidden': 'true' })
+									'div',
+									null,
+									_react2.default.createElement(
+										'button',
+										{ className: 'addDrinkName', onClick: this.addCocktail },
+										_react2.default.createElement('i', { className: 'fa fa-plus', 'aria-hidden': 'true' })
+									)
 								)
 							),
-							_react2.default.createElement(
-								'ul',
+							this.state.showAddNewIngredients === true ? _react2.default.createElement(
+								'fieldset',
 								null,
-								this.state.ingredients.map(function (ing, i) {
-									return _react2.default.createElement(
-										'li',
-										{ key: 'ing-' + i
-											// remove={this.removeIng}
-										},
-										ing.amount,
-										'oz ',
-										ing.ingredient
-									);
-								})
+								_react2.default.createElement(
+									'h3',
+									null,
+									'ingredients'
+								),
+								_react2.default.createElement(
+									'div',
+									{ className: 'addingredient', onClick: this.showAddInput },
+									_react2.default.createElement('input', { className: 'amount', name: 'amount', type: 'number', placeholder: '2', onChange: this.handleChange, value: this.state.amount }),
+									_react2.default.createElement(
+										'p',
+										{ className: 'oz' },
+										'oz'
+									),
+									_react2.default.createElement('input', { className: 'ingredientName', type: 'text', name: 'ingredient', value: this.state.ingredient, placeholder: 'ingredient', onChange: this.handleChange }),
+									_react2.default.createElement(
+										'button',
+										{ className: 'addIngredientButton', onClick: this.addIngredient },
+										_react2.default.createElement('i', { className: 'fa fa-plus', 'aria-hidden': 'true' })
+									)
+								),
+								_react2.default.createElement(
+									'ul',
+									null,
+									this.state.ingredients.map(function (ing, i) {
+										return _react2.default.createElement(
+											'li',
+											{ key: 'ing-' + i },
+											ing.amount,
+											'oz ',
+											ing.ingredient,
+											_react2.default.createElement(
+												'button',
+												{ className: 'deleteIng', onClick: _this3.removeIng },
+												_react2.default.createElement('i', { className: 'fa fa-times', 'aria-hidden': 'true' })
+											)
+										);
+									})
+								)
+							) : null,
+							_react2.default.createElement(
+								'fieldset',
+								null,
+								_react2.default.createElement('input', { className: 'submitCocktailButton', type: 'submit', value: 'Add to collection' })
 							)
-						) : null,
-						_react2.default.createElement(
-							'fieldset',
-							null,
-							_react2.default.createElement('input', { type: 'submit', value: 'add' })
-						)
-					) : null
+						) : null
+					),
+					_react2.default.createElement(
+						'section',
+						{ className: 'drinks' },
+						this.state.drinks.map(function (drink, i) {
+							return _react2.default.createElement(
+								'div',
+								{ className: 'userDrinks', key: 'drink-' + i },
+								_react2.default.createElement(
+									'button',
+									{ className: 'deleteCocktail', onClick: function onClick() {
+											return _this3.removeItem(drink);
+										} },
+									_react2.default.createElement('i', { className: 'fa fa-times', 'aria-hidden': 'true' })
+								),
+								_react2.default.createElement(
+									'h1',
+									null,
+									drink.name
+								),
+								_react2.default.createElement(
+									'ul',
+									null,
+									drink.ingredients.map(function (drink, i) {
+										return _react2.default.createElement(
+											'li',
+											{ key: 'drink-' + i },
+											drink.amount,
+											'oz ',
+											drink.ingredient
+										);
+									})
+								)
+							);
+						})
+					)
 				),
 				_react2.default.createElement(
-					'section',
-					{ className: 'drinks' },
-					this.state.drinks.map(function (drink, i) {
-						return _react2.default.createElement(
-							'div',
-							{ key: 'drink-' + i },
-							_react2.default.createElement(
-								'h1',
-								null,
-								drink.name
-							),
-							_react2.default.createElement(
-								'p',
-								null,
-								drink.ingredients[0].amount,
-								'oz ',
-								drink.ingredients[0].ingredient
-							)
-						);
-					})
+					'footer',
+					null,
+					_react2.default.createElement(
+						'a',
+						{ href: 'http://www.renniecee.com/drinksavvy/' },
+						'cocktail calculator'
+					)
 				)
 			);
 		}

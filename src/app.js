@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
+
 var config = {
     apiKey: "AIzaSyB2J1O0R38V_fpJtMKVQyDuAM2EqYt6KY4",
     authDomain: "drink-savvy.firebaseapp.com",
@@ -16,8 +17,10 @@ class App extends React.Component {
 		this.state = {
 			showAddNewDrink: false,
 			showAddNewIngredients: false,
+			showSubmitCocktail: false,
 			amount: '',
 			ingredients: [],
+			ingredient:'',
 			drinkName: '',
 			drinks: []
 		}
@@ -29,14 +32,34 @@ class App extends React.Component {
 		this.addDrink = this.addDrink.bind(this);
 		this.resetForm = this.resetForm.bind(this);
 		this.removeIng = this.removeIng.bind(this);
-		this.displayDrinks = this.displayDrinks.bind(this);
+		this.removeItem = this.removeItem.bind(this);
+		this.submitCocktail = this.submitCocktail.bind(this);
+		
 	}
-	displayDrinks(){
+	componentDidMount() {
+	        firebase.database().ref().on('value', (res) => {
+	            const userData = res.val();
+	            const dataArray = [];
+	            for(let objectKey in userData) {
+	                userData[objectKey].key = objectKey;
+	                dataArray.push(userData[objectKey]);
+	            }
+	            this.setState({
+	                drinks: dataArray
+	            })
+	        });
+	    }
+	removeItem(drink){
+		const dbRef = firebase.database().ref(drink.key);
+		dbRef.remove();
+
+
+	}
+	submitCocktail(e){
+		e.preventDefault();
 		this.setState({
-			drinks: this.state.drinks
-		});
-		const dbRef = firebase.database().ref();
-		dbRef.push(drinks);
+			showSubmitCocktail: true
+		})
 	}
 	removeIng(ingIndex){
 		const ingState = Array.from(this.state.ingredients);
@@ -69,9 +92,6 @@ class App extends React.Component {
 			ingredient: this.state.ingredient
 		}
 		const newIngredients = [...this.state.ingredients, ingredient]
-
-		//Clear state for amount and ingredient to clear
-		// console.log("new", ingredient);
 		this.setState({
 			ingredients: newIngredients,
 			amount: '',
@@ -85,16 +105,21 @@ class App extends React.Component {
 			ingredients: this.state.ingredients
 		};
 
-		const newDrinks = [...this.state.drinks, drink]
-		this.setState({
-			drinks: newDrinks,
-		});
+		const dbRef = firebase.database().ref();
+		dbRef.push(drink);
+
 		this.resetForm();
 	}
 	showDrinkCart() {
+		if(this.state.showAddNewDrink === false){
 		this.setState({
 			showAddNewDrink: true
 		})
+	} if(this.state.showAddNewDrink === true) {
+		this.setState({
+			showAddNewDrink: false
+		})
+	}
 	}
 	handleChange(e) {
 		this.setState({
@@ -104,49 +129,51 @@ class App extends React.Component {
 	render(){
 		return (
 			<div className="wrapper">
+			<div className="bubble1"></div>
+			<div className="bubble2"></div>
+			<div className="bubble3"></div>
 			<header>
-				<div className="title">
-					<h2>Drink Savvy</h2>
-					<h1>recipes</h1>
-				</div>
 				<div className="showAdd" onClick={this.showDrinkCart}>
 					<p>Add Drink</p>
 					<i className="fa fa-plus" aria-hidden="true"></i>
 				</div>
+				<div className="title">
+					<h2>Drink Savvy</h2>
+					<h1>recipes</h1>
+				</div>
+				<div className="empty"></div>
 			</header>
 			
+			<div className="main">
 			<section className="addRecipe" ref={ref => this.addrecipe = ref}>
 				{ this.state.showAddNewDrink === true ?
-						<form onSubmit={this.addDrink}>
-							<h3>Add a cocktail</h3>
-							<fieldset>
-								<input className="drinkName" type="text" name="drinkName" placeholder="Drink name" onChange={this.handleChange} />
+						<form className="addCocktailForm" onSubmit={this.addDrink}>
+							<h3>add a cocktail</h3>
+							<fieldset className="drinkNameFieldset">
+								<input className="drinkName" type="text" name="drinkName" placeholder="Drink name" onChange={this.handleChange} value={this.state.drinkName} />
 							<div>
-								<button onClick={this.addCocktail}>Add cocktail</button>
+								<button className="addDrinkName" onClick={this.addCocktail}><i className="fa fa-plus" aria-hidden="true"></i></button>
 							</div>
 							</fieldset>
 							{ this.state.showAddNewIngredients === true ? 
 								<fieldset>
-									<h3>Ingredients</h3>
+									<h3>ingredients</h3>
 										<div className="addingredient" onClick={this.showAddInput}>
-										<input className="amount" name="amount" type="number" onChange={this.handleChange} value={this.state.amount} /><p className='oz'>oz</p>
+										<input className="amount" name="amount" type="number" placeholder="2" onChange={this.handleChange} value={this.state.amount} /><p className='oz'>oz</p>
 										<input className="ingredientName" type="text" name="ingredient" value={this.state.ingredient} placeholder="ingredient" onChange={this.handleChange} />
-										<button onClick={this.addIngredient}><i className="fa fa-plus" aria-hidden="true"></i></button>
+										<button className="addIngredientButton"onClick={this.addIngredient}><i className="fa fa-plus" aria-hidden="true"></i></button>
 										</div>
 										<ul>
 											{this.state.ingredients.map((ing, i) => {
-												return <li key={`ing-${i}`} 
-												// remove={this.removeIng}
-												>{ing.amount}oz {ing.ingredient}</li>
+												return <li key={`ing-${i}`}>{ing.amount}oz {ing.ingredient}<button className="deleteIng" onClick={this.removeIng}><i className="fa fa-times" aria-hidden="true"></i></button></li>
 											})}
 										</ul>
 								</fieldset>
 								:
 									null
 							}
-							
 							<fieldset>
-								<input type="submit" value="add" />
+								<input className="submitCocktailButton" type="submit" value="Add to collection" />
 							</fieldset>
 						</form>
 					:
@@ -157,17 +184,26 @@ class App extends React.Component {
 			<section className="drinks">
 				{this.state.drinks.map((drink, i) => {
 					return (
-						<div key={`drink-${i}`}>
+						<div className="userDrinks" key={`drink-${i}`}>
+							<button className="deleteCocktail" onClick={() => this.removeItem(drink)}><i className="fa fa-times" aria-hidden="true"></i></button>
 							<h1>{drink.name}</h1>
-							<p>{drink.ingredients[0].amount}oz {drink.ingredients[0].ingredient}</p>
+							<ul>
+							{drink.ingredients.map((drink, i) => {
+								return <li key={`drink-${i}`}>{drink.amount}oz {drink.ingredient}</li>
+							})}
+							</ul>
 						</div>
 					)
 				})}
 			</section>
-
+			</div>
+				<footer>
+					<a href="http://www.renniecee.com/drinksavvy/">cocktail calculator</a>
+				</footer>
 			</div>
 		)
 	}
 }
+
 
 ReactDOM.render(<App/>, document.getElementById('app'));

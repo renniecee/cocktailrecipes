@@ -6,10 +6,11 @@ body {
 }
 
 #app {
-	background: linear-gradient(225deg, #0C0A27 0%, #000000 100%);
-	height: calc(100vh - 20px);
+	background: linear-gradient(225deg, #110F32 0%, #000000 100%);
+	min-height: calc(100vh - 20px);
 	width: calc(100vw - 20px);
 	margin: 10px;
+	z-index: -1;
 }
 
 .wrapper {
@@ -25,6 +26,13 @@ h1, h3 {
 	-webkit-font-smoothing: antialiased;
 }
 
+h1 {
+	font-size: 35px;
+	font-style: italic;
+	text-transform: lowercase;
+	margin-bottom: 20px;
+}
+
 h2 {
 	font-size: 11px;
 	text-transform: uppercase;
@@ -33,6 +41,11 @@ h2 {
 	color: #FDB333;
 	text-align: center;
 	font-weight: 100;
+}
+
+h3 {
+	font-style: italic;
+	font-size: 2em;
 }
 
 p {
@@ -46,17 +59,50 @@ header {
 	margin: 0 auto;
 	margin-top: 40px;
 	text-align: center;
-/* 	display: flex;
-	justify-content: space-between; */
+	position: relative;
+	display: flex;
+	justify-content: space-between;
 }
 
-/* header.title {
-	align-self: center;
+header h1 {
+	font-size: 50px;
 }
 
-header.showAdd {
-	align-self: flex-end;
-} */
+.showAdd {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	margin: 20px 20px;
+}
+
+.showAdd i {
+	padding-bottom: 5px;
+}
+
+.showAdd:hover {
+	color: #FDB333;
+}
+
+.showAdd p:hover {
+	border-bottom: 1px solid #FDB333;
+	transition: .3s ease-in;
+	color: white;
+}
+
+.showAdd p {
+	margin-right: 10px;
+	color: #FDB333;
+	border: 1px solid rgba(0,0,0,0);
+	padding-bottom: 5px;
+}
+
+.empty {
+	width: 140px;
+}
+
+.addCocktailForm {
+	width: 300px;
+}
 
 fieldset {
 	border: none;
@@ -64,22 +110,262 @@ fieldset {
 	margin: 10px 0;
 }
 
-input.amount {
-	width: 40px;
-	float: left;
+fieldset.drinkNameFieldset{
+	margin: 15px 0 25px 0;
 }
 
 .drinkName {
-	width: 275px;
+	width: 250px;
 	margin: 0;
 	float: left;
+	border: 1px solid rgba(255,255,255,.2);
+	border-radius: 3px;
+	background: none;
+	color: white;
+	font-size: 11px;
+	text-transform: uppercase;
+	letter-spacing: 3px;
+	padding: 10px 7px;
+}
+
+.drinkName:focus {
+	border: 1px solid #FDB333;
+}
+
+.addDrinkName {
+	background: none;
+	border: none;
+	color: #FDB333;
+	font-size: 15px;
+	position: relative;
+	right: 30px;
+	top: 6px;
+}
+
+input.amount {
+	width: 40px;
+	float: left;
+	background: none;
+	color: white;
+	font-size: 11px;
+	border: 1px solid rgba(0,0,0,0);
+	padding: 10px 0;
+	border-bottom: 1px solid rgba(255,255,255,.2);
+}
+
+.amount:focus {
+	border: 1px solid #FDB333;
 }
 
 .oz{
 	float: left;
-	margin: 0;
+	padding-left: 7px;
 }
 
 .ingredientName {
 	float: left;
+	border: 1px solid rgba(0,0,0,0);
+	background: none;
+	border-bottom: 1px solid rgba(255,255,255,.2);
+	color: white;
+	font-size: 11px;
+	text-transform: uppercase;
+	letter-spacing: 3px;
+	padding: 10px 0;
+	margin-left: 10px;
+	width: 184px;
+}
+
+.ingredientName:focus {
+	border: 1px solid #FDB333;
+}
+
+.addIngredientButton{
+	background: none;
+	border: none;
+	color: #FDB333;
+	font-size: 15px;
+	position: relative;
+	right: 30px;
+	top: 6px;
+}
+
+.addingredient {
+	margin-top: 5px;
+	height: 50px;
+}
+
+.deleteIng {
+	background: none;
+	border: none;
+	color: #FDB333;
+	font-size: 15px;
+	margin-left: 5px;
+ }
+
+ul {
+	padding-left: 0;
+	list-style-type: none;
+	text-transform: uppercase;
+	letter-spacing: 3px;
+	font-size: 11px;
+	width: 265px;
+}
+
+li {
+	padding: 10px 0 3px 0;
+	border-bottom: 1px solid rgba(255,255,255,.2);
+}
+
+.submitCocktailButton {
+	width: 265px;
+	margin-top: 10px;
+	float: left;
+	border: 1px solid rgba(255,255,255,.2);
+	border-radius: 3px;
+	background: #070715;
+	color: #FDB333;
+	font-size: 11px;
+	text-transform: uppercase;
+	letter-spacing: 3px;
+	padding: 10px 0;
+	text-align: center;
+}
+
+.submitCocktailButton:hover {
+	border: 1px solid #FDB333;
+	background: #FDB333;
+	color: white;
+	transition: .3s ease-in;
+}
+
+ .bubble1{
+	width: 220px;
+	height: 220px;
+	border-radius: 50%;
+	background: linear-gradient(230deg, #070715 4%, #110F32 100%);
+	position: absolute;
+	top: 50px;
+	left: 160px;
+}
+
+.bubble2 {
+	width: 400px;
+	height: 400px;
+	border-radius: 50%;
+	background: linear-gradient(230deg, #070715 0%, #100E2E 100%);
+	position: absolute;
+	top: 250px;
+	right: 180px;
+	overflow: hidden;
+}
+
+.bubble3 {
+	width: 100px;
+	height: 100px;
+	border-radius: 50%;
+	background: linear-gradient(230deg, #110F32 8%, #171544 100%);
+	position: absolute;
+	bottom: 190px;
+	right: 50px;
+}
+.addRecipe {
+	position: relative;
+}
+
+.drinks {
+	position: relative;
+}
+
+.deleteCocktail {
+	background: none;
+	border: none;
+	color: #FDB333;
+	font-size: 15px;
+	position: relative;
+	top: 37px;
+	right: 30px;
+}
+
+.deleteCocktail:hover {
+	color: white;
+	transition: .3s ease-in;
+}
+
+.main {
+	display: flex;
+	flex-wrap: nowrap;
+	justify-content: center;
+	align-items: flex-start;
+}
+
+.addRecipe {
+	width: 300px;
+	margin: 30px 20px;
+	/* align-self: flex-start; */
+}
+
+.drinks {
+	width: 70%;
+	height: 50vh;
+	overflow: scroll;
+	min-width: ;
+	padding: 30px 20px;
+	margin: 30px 20px;
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-between;
+}
+
+.userDrinks {
+	max-width: 280px;
+	margin: 40px 50px;
+}
+
+footer {
+	margin: 0 auto;
+	text-align: center;
+	width: 100%;
+	margin-bottom: 40px;
+	position: relative;
+}
+
+footer a {
+	color: #FDB333;
+	text-transform: uppercase;
+	font-size: 11px;
+	letter-spacing: 3px;
+	text-decoration: none;
+	border: 1px solid rgba(0,0,0,0);
+	padding-bottom: 7px;
+}
+
+footer a:hover {
+	color: white;
+	border-bottom: 1px solid #FDB333;
+	transition: .3s ease-in;
+}
+
+@media (max-width: 1308px){
+	.userDrinks {
+	width: 280px;
+	margin: 40px 30px;
+}
+}
+@media (max-width: 800px){
+	.addCocktailForm {
+		width: 100%;
+	}
+	.main {
+		flex-direction: column;
+	}
+	.drinkName {
+		width: 60vw;
+	}
+	.addDrinkName {
+		right: 0;
+	}
+	.submitCocktailButton {
+		margin: 0 auto;
+	}
 }
