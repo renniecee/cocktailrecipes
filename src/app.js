@@ -15,14 +15,19 @@ class App extends React.Component {
 	constructor(){
 		super();
 		this.state = {
-			showAddNewDrink: false,
+			showAddNewDrink: true,
 			showAddNewIngredients: false,
 			showSubmitCocktail: false,
 			amount: '',
-			ingredients: [],
+			ingredients: ["booze"],
 			ingredient:'',
 			drinkName: '',
-			drinks: []
+			enableIngredient: false,
+			enableAmount: false,
+			enableAddInCollection: false,
+			drinks: [{
+				ingredients: []
+			}]
 		}
 		this.showDrinkCart = this.showDrinkCart.bind(this);
 		this.handleChange = this.handleChange.bind(this);
@@ -122,8 +127,20 @@ class App extends React.Component {
 	}
 	}
 	handleChange(e) {
+		let ingredient = true;
+		let amount = true;
+		if(e.target.name === "amount" && e.target.value.length > 0){
+			// amount = false;
+			console.log('yo');
+		}
+		if(e.target.name === "ingredient" && e.target.value.length > 0){
+			// ingredient = false;
+			console.log('ing');
+		}
 		this.setState({
-			[e.target.name]: e.target.value
+			[e.target.name]: e.target.value,
+			enableIngredient: ingredient,
+			enableAmount: amount
 		});
 	}
 	render(){
@@ -161,7 +178,7 @@ class App extends React.Component {
 										<div className="addingredient" onClick={this.showAddInput}>
 										<input className="amount" name="amount" type="number" placeholder="2" onChange={this.handleChange} value={this.state.amount} /><p className='oz'>oz</p>
 										<input className="ingredientName" type="text" name="ingredient" value={this.state.ingredient} placeholder="ingredient" onChange={this.handleChange} />
-										<button className="addIngredientButton"onClick={this.addIngredient}><i className="fa fa-plus" aria-hidden="true"></i></button>
+										<button className="addIngredientButton" onClick={this.addIngredient} disabled={! (this.state.enableAmount && this.state.enableIngredient)} ><i className="fa fa-plus" aria-hidden="true"></i></button>
 										</div>
 										<ul>
 											{this.state.ingredients.map((ing, i) => {

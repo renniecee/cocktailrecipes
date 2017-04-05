@@ -20529,14 +20529,19 @@ var App = function (_React$Component) {
 		var _this = _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).call(this));
 
 		_this.state = {
-			showAddNewDrink: false,
+			showAddNewDrink: true,
 			showAddNewIngredients: false,
 			showSubmitCocktail: false,
 			amount: '',
-			ingredients: [],
+			ingredients: ["booze"],
 			ingredient: '',
 			drinkName: '',
-			drinks: []
+			enableIngredient: false,
+			enableAmount: false,
+			enableAddInCollection: false,
+			drinks: [{
+				ingredients: []
+			}]
 		};
 		_this.showDrinkCart = _this.showDrinkCart.bind(_this);
 		_this.handleChange = _this.handleChange.bind(_this);
@@ -20657,7 +20662,19 @@ var App = function (_React$Component) {
 	}, {
 		key: 'handleChange',
 		value: function handleChange(e) {
-			this.setState(_defineProperty({}, e.target.name, e.target.value));
+			var _setState;
+
+			var ingredient = true;
+			var amount = true;
+			if (e.target.name === "amount" && e.target.value.length > 0) {
+				// amount = false;
+				console.log('yo');
+			}
+			if (e.target.name === "ingredient" && e.target.value.length > 0) {
+				// ingredient = false;
+				console.log('ing');
+			}
+			this.setState((_setState = {}, _defineProperty(_setState, e.target.name, e.target.value), _defineProperty(_setState, 'enableIngredient', ingredient), _defineProperty(_setState, 'enableAmount', amount), _setState));
 		}
 	}, {
 		key: 'render',
@@ -20749,7 +20766,7 @@ var App = function (_React$Component) {
 									_react2.default.createElement('input', { className: 'ingredientName', type: 'text', name: 'ingredient', value: this.state.ingredient, placeholder: 'ingredient', onChange: this.handleChange }),
 									_react2.default.createElement(
 										'button',
-										{ className: 'addIngredientButton', onClick: this.addIngredient },
+										{ className: 'addIngredientButton', onClick: this.addIngredient, disabled: !(this.state.enableAmount && this.state.enableIngredient) },
 										_react2.default.createElement('i', { className: 'fa fa-plus', 'aria-hidden': 'true' })
 									)
 								),
